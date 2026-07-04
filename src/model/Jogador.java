@@ -44,7 +44,11 @@ public class Jogador {
         return vida <= 0;
     }
 
-    
+    /**
+     * @return true se a carta foi realmente colocada no campo, false se a
+     *         jogada foi inválida (usado pelo GameManager para saber se deve
+     *         disparar a resposta da IA e o combate).
+     */
     public boolean jogarCarta(int indiceCarta, int posicao) {
 
         if (indiceCarta < 0 || indiceCarta >= mao.size()) {
@@ -191,6 +195,27 @@ public class Jogador {
 
     public int getVida() {
         return vida;
+    }
+
+    /**
+     * Usado pelo SaveDAO para restaurar a vida exata de uma partida salva.
+     */
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    /**
+     * Usado pelo SaveDAO para restaurar a mão exata de uma partida salva.
+     */
+    public void setMao(ArrayList<Carta> mao) {
+        this.mao = mao;
+    }
+
+    /**
+     * Usado pelo SaveDAO para restaurar o campo exato de uma partida salva.
+     */
+    public void setCampo(Carta[] campo) {
+        this.campo = campo;
     }
 
     public int getSangue() {
