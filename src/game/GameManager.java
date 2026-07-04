@@ -25,6 +25,14 @@ public class GameManager {
         this.jogador = jogador;
         this.scanner = scanner;
 
+        // Garante que todo novo jogo comece com vida, sangue, mão e campo
+        // zerados — mesmo que este mesmo objeto Jogador já tenha sido
+        // usado em outra partida nesta sessão. Pontuação e estatísticas
+        // não são afetadas (resetParaNovaPartida não mexe nelas). Se o
+        // jogador estiver na verdade continuando uma partida salva, esse
+        // reset é sobrescrito logo em seguida por SaveDAO.carregar().
+        this.jogador.resetParaNovaPartida();
+
         this.maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
 
         DeckDAO dao = new DeckDAO();
@@ -53,6 +61,7 @@ public class GameManager {
         }
 
         partida = carregada;
+        this.maquina = partida.getMaquina();
 
         System.out.println(Cores.sucesso("\nPartida carregada! (turno " + partida.getTurno() + ")"));
 
@@ -92,8 +101,10 @@ public class GameManager {
             }
         }
 
-        // A partida terminou naturalmente (vitória ou derrota): pergunta
+        // A partida terminou naturalmente (vitória ou derrota): remove
+        // qualquer save "fantasma" dessa partida já finalizada e pergunta
         // se o jogador quer continuar para a próxima partida ou sair.
+        new SaveDAO().removerSave(jogador.getId());
         perguntarProximaPartida();
     }
 
