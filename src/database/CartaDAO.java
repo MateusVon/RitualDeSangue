@@ -48,6 +48,49 @@ public class CartaDAO {
     }
 
     /**
+     * Busca uma única carta pelo id. Usado pelo SaveDAO para reconstruir
+     * a mão, o campo e o deck de uma partida salva a partir dos ids
+     * gravados no banco.
+     */
+    public Carta buscarPorId(int idCarta) {
+
+        String sql = """
+                SELECT
+                    c.id_carta,
+                    c.nome,
+                    c.ataque,
+                    c.vida,
+                    c.custo_sangue,
+                    c.descricao,
+                    r.nome AS raridade,
+                    t.nome AS tipo
+                FROM carta c
+                INNER JOIN raridade r ON c.id_raridade = r.id_raridade
+                INNER JOIN tipo_carta t ON c.id_tipo = t.id_tipo
+                WHERE c.id_carta = ?
+                """;
+
+        try (
+                Connection conn = Conexao.conectar();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, idCarta);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return construirCarta(conn, rs);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar carta por id: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
      * Monta um objeto Carta a partir de uma linha de ResultSet e tenta
      * carregar as palavras-chave associadas a ela. Reaproveitado por
      * CartaDAO e DeckDAO para manter a criação de Carta consistente
