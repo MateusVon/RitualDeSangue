@@ -1,6 +1,7 @@
 package model;
 
 import database.JogadorDAO;
+import util.Cores;
 
 public class partida {
 
@@ -54,14 +55,14 @@ public class partida {
     verificarFimPartida();
   }
 
-  public void verificarFimPartida() {
+   public void verificarFimPartida() {
     if (jogador.perdeu()) {
       partidaFinalizada = true;
-      System.out.println("\nVocê perdeu!");
+      System.out.println("\n" + Cores.erro("Sua vida chegou a ZERO! Você perdeu..."));
       salvarResultado();
     } else if (maquina.perdeu()) {
       partidaFinalizada = true;
-      System.out.println("\nVocê venceu!");
+      System.out.println("\n" + Cores.sucesso("A vida da máquina chegou a ZERO! Você venceu!"));
       salvarResultado();
     }
   }

@@ -6,6 +6,9 @@ import auth.AuthService;
 import game.GameManager;
 import model.Jogador;
 import util.Cores;
+import java.util.ArrayList;
+import database.PartidaDAO;
+import model.RegistroPartida;
 
 public class TerminalUI {
 
@@ -122,7 +125,7 @@ public class TerminalUI {
           break;
 
         case 4:
-          mostrarHistorico();
+          mostrarHistorico(jogador);
           break;
 
         case 5:
@@ -177,10 +180,28 @@ public class TerminalUI {
   // HISTÓRICO
   // =========================
 
-  private void mostrarHistorico() {
-    System.out.println("\nSistema ainda será implementado.");
+  private void mostrarHistorico(Jogador jogador) {
+
+  System.out.println("\n" + Cores.titulo("===== HISTÓRICO DE PARTIDAS ====="));
+
+  PartidaDAO dao = new PartidaDAO();
+  ArrayList<RegistroPartida> registros = dao.buscarHistorico(jogador.getId());
+
+  if (registros.isEmpty()) {
+    System.out.println("Nenhuma partida registrada ainda.");
+    return;
   }
 
+  for (RegistroPartida r : registros) {
+    String resultadoColorido = r.isVitoria()
+        ? Cores.sucesso("VITÓRIA")
+        : Cores.erro("DERROTA");
+
+    System.out.println(r.getData() + "  " + resultadoColorido
+        + "  " + Cores.pontos(String.valueOf(r.getPontuacao())) + " pts"
+        + "  (" + r.getDuracaoFormatada() + ")");
+  }
+}
   // =========================
   // ESTATÍSTICAS
   // =========================
