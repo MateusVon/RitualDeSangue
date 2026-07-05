@@ -25,7 +25,6 @@ public class GameManager {
     this.jogador = jogador;
     this.scanner = scanner;
 
-<<<<<<< HEAD
         // Garante que todo novo jogo comece com vida, sangue, mão e campo
         // zerados — mesmo que este mesmo objeto Jogador já tenha sido
         // usado em outra partida nesta sessão. Pontuação e estatísticas
@@ -35,9 +34,6 @@ public class GameManager {
         this.jogador.resetParaNovaPartida();
 
         this.maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
-=======
-    this.maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
     DeckDAO dao = new DeckDAO();
     jogador.setDeck(dao.gerarDeckAleatorio());
@@ -117,14 +113,11 @@ public class GameManager {
 
     String linha = "════════════════════════════════════════════════════";
 
-<<<<<<< HEAD
         partida = carregada;
         this.maquina = partida.getMaquina();
-=======
     System.out.println("\n" + Cores.titulo(linha));
     System.out.println(Cores.titulo("  RITUAL DE SANGUE  —  Turno " + partida.getTurno()));
     System.out.println(Cores.titulo(linha));
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
     System.out.println(
         Cores.NEGRITO + jogador.getNome() + Cores.RESET
@@ -202,7 +195,6 @@ public class GameManager {
 
     boolean jogou = jogador.jogarCarta(carta, pos);
 
-<<<<<<< HEAD
                 case 1:
                     jogarCartaDaMao();
                     break;
@@ -226,10 +218,6 @@ public class GameManager {
         // se o jogador quer continuar para a próxima partida ou sair.
         new SaveDAO().removerSave(jogador.getId());
         perguntarProximaPartida();
-=======
-    if (!jogou) {
-      return;
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
     }
 
     System.out.println(Cores.titulo("\n-- Seu campo ataca! --"));

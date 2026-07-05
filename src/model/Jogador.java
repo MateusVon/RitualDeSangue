@@ -44,6 +44,11 @@ public class Jogador {
     return vida <= 0;
   }
 
+  /**
+   * @return true se a carta foi realmente colocada no campo, false se a
+   *         jogada foi inválida (usado pelo GameManager para saber se deve
+   *         disparar a resposta da IA e o combate).
+   */
   public boolean jogarCarta(int indiceCarta, int posicao) {
 
     if (indiceCarta < 0 || indiceCarta >= mao.size()) {
@@ -56,49 +61,9 @@ public class Jogador {
       return false;
     }
 
-<<<<<<< HEAD
-    /**
-     * @return true se a carta foi realmente colocada no campo, false se a
-     *         jogada foi inválida (usado pelo GameManager para saber se deve
-     *         disparar a resposta da IA e o combate).
-     */
-    public boolean jogarCarta(int indiceCarta, int posicao) {
-
-        if (indiceCarta < 0 || indiceCarta >= mao.size()) {
-            System.out.println("Carta inválida");
-            return false;
-        }
-
-        if (posicao < 0 || posicao >= campo.length) {
-            System.out.println("Posição inválida");
-            return false;
-        }
-
-        if (campo[posicao] != null) {
-            System.out.println("Posição ocupada");
-            return false;
-        }
-
-        Carta carta = mao.get(indiceCarta);
-
-        if (!gastarSangue(carta.getCustoSangue())) {
-            System.out.println(Cores.erro("Sangue insuficiente! Você tem " + sangue
-                    + " e " + carta.getNome() + " custa " + carta.getCustoSangue() + "."));
-            return false;
-        }
-
-        mao.remove(indiceCarta);
-        campo[posicao] = carta;
-
-        System.out.println(Cores.sucesso(nome + " jogou " + carta.getNome())
-                + " (custou " + Cores.sangue(String.valueOf(carta.getCustoSangue())) + " de sangue, restam "
-                + Cores.sangue(String.valueOf(sangue)) + ")");
-        return true;
-=======
     if (campo[posicao] != null) {
       System.out.println("Posição ocupada");
       return false;
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
     }
 
     Carta carta = mao.get(indiceCarta);
@@ -232,6 +197,27 @@ public class Jogador {
     return vida;
   }
 
+  /**
+   * Usado pelo SaveDAO para restaurar a vida exata de uma partida salva.
+   */
+  public void setVida(int vida) {
+    this.vida = vida;
+  }
+
+  /**
+   * Usado pelo SaveDAO para restaurar a mão exata de uma partida salva.
+   */
+  public void setMao(ArrayList<Carta> mao) {
+    this.mao = mao;
+  }
+
+  /**
+   * Usado pelo SaveDAO para restaurar o campo exato de uma partida salva.
+   */
+  public void setCampo(Carta[] campo) {
+    this.campo = campo;
+  }
+
   public int getSangue() {
     return sangue;
   }
@@ -268,85 +254,15 @@ public class Jogador {
     return totalPartidas;
   }
 
-<<<<<<< HEAD
-    /**
-     * Usado pelo SaveDAO para restaurar a vida exata de uma partida salva.
-     */
-    public void setVida(int vida) {
-        this.vida = vida;
-    }
-
-    /**
-     * Usado pelo SaveDAO para restaurar a mão exata de uma partida salva.
-     */
-    public void setMao(ArrayList<Carta> mao) {
-        this.mao = mao;
-    }
-
-    /**
-     * Usado pelo SaveDAO para restaurar o campo exato de uma partida salva.
-     */
-    public void setCampo(Carta[] campo) {
-        this.campo = campo;
-    }
-
-    public int getSangue() {
-        return sangue;
-    }
-=======
   public int getTotalVitorias() {
     return totalVitorias;
   }
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
   public void setTotalPartidas(int totalPartidas) {
     this.totalPartidas = totalPartidas;
   }
 
-<<<<<<< HEAD
-    public int getPontuacao() {
-        return pontuacao;
-    }
-
-    public void setPontuacao(int pontuacao) {
-        this.pontuacao = pontuacao;
-    }
-
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
-
-    public Deck getDeck() {
-        return deck;
-    }
-
-    public ArrayList<Carta> getMao() {
-        return mao;
-    }
-
-    public Carta[] getCampo() {
-        return campo;
-    }
-
-    public int getTotalPartidas() {
-        return totalPartidas;
-    }
-
-    public int getTotalVitorias() {
-        return totalVitorias;
-    }
-
-    public void setTotalPartidas(int totalPartidas) {
-        this.totalPartidas = totalPartidas;
-    }
-
-    public void setTotalVitorias(int totalVitorias) {
-        this.totalVitorias = totalVitorias;
-    }
-}
-=======
   public void setTotalVitorias(int totalVitorias) {
     this.totalVitorias = totalVitorias;
   }
 }
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537

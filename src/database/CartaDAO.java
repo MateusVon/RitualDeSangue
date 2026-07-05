@@ -43,7 +43,6 @@ public class CartaDAO {
       System.out.println("Erro ao buscar cartas: " + e.getMessage());
     }
 
-<<<<<<< HEAD
     /**
      * Busca uma única carta pelo id. Usado pelo SaveDAO para reconstruir
      * a mão, o campo e o deck de uma partida salva a partir dos ids
@@ -94,10 +93,6 @@ public class CartaDAO {
      * em todo o projeto.
      */
     public static Carta construirCarta(Connection conn, ResultSet rs) throws SQLException {
-=======
-    return cartas;
-  }
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
   /**
    * Monta um objeto Carta a partir de uma linha de ResultSet e tenta
@@ -147,9 +142,4 @@ public class CartaDAO {
       // Tabela de palavras-chave ausente/diferente no schema atual.
       // Ignorado de propósito para não quebrar o carregamento das cartas.
     }
-<<<<<<< HEAD
 }
-=======
-  }
-}
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537

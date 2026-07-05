@@ -22,7 +22,6 @@ public class SaveDAO {
 
   public void salvar(partida partida) {
 
-<<<<<<< HEAD
         Jogador jogador = partida.getJogador();
         Jogador maquina = partida.getMaquina();
 
@@ -45,21 +44,11 @@ public class SaveDAO {
                 vida_jogador = ?, sangue_jogador = ?, mao_jogador = ?, campo_jogador = ?, deck_jogador = ?,
                 vida_maquina = ?, sangue_maquina = ?, mao_maquina = ?, campo_maquina = ?, deck_maquina = ?
                 """;
-=======
-    String sql = """
-        INSERT INTO save_partida
-        (id_jogador, turno)
-        VALUES (?, ?)
-        ON DUPLICATE KEY UPDATE
-        turno = ?
-        """;
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
     try (
         Connection conn = Conexao.conectar();
         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-<<<<<<< HEAD
             String maoJogador = idsDaLista(jogador.getMao());
             String campoJogador = idsDoCampo(jogador.getCampo());
             String deckJogador = idsDaLista(jogador.getDeck().getCartas());
@@ -92,11 +81,6 @@ public class SaveDAO {
             ps.setString(21, maoMaquina);
             ps.setString(22, campoMaquina);
             ps.setString(23, deckMaquina);
-=======
-      ps.setInt(1, partida.getJogador().getId());
-      ps.setInt(2, partida.getTurno());
-      ps.setInt(3, partida.getTurno());
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
       ps.executeUpdate();
 
@@ -107,7 +91,6 @@ public class SaveDAO {
     }
   }
 
-<<<<<<< HEAD
     /**
      * Restaura a partida salva do jogador informado, reconstruindo o
      * estado completo de AMBOS os lados (jogador e máquina): vida,
@@ -121,26 +104,6 @@ public class SaveDAO {
                 FROM save_partida
                 WHERE id_jogador = ?
                 """;
-=======
-  /**
-   * Restaura uma partida salva para o jogador informado.
-   *
-   * Observação importante: a tabela save_partida atual só guarda o
-   * número do turno, não o estado do campo/mão de cada jogador.
-   * Por isso o "carregamento" recria o tabuleiro (deck novo, mão
-   * inicial) e avança os turnos até o valor salvo, para o jogo
-   * continuar de forma consistente. Para persistir campo/mão de
-   * verdade, seria necessário adicionar tabelas extras (ex:
-   * carta_em_campo, carta_na_mao) e salvar/carregar esse estado aqui.
-   */
-  public partida carregar(Jogador jogador) {
-
-    String sql = """
-        SELECT turno
-        FROM save_partida
-        WHERE id_jogador = ?
-        """;
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
 
     try (
         Connection conn = Conexao.conectar();
@@ -152,7 +115,6 @@ public class SaveDAO {
 
       if (rs.next()) {
 
-<<<<<<< HEAD
                 CartaDAO cartaDAO = new CartaDAO();
 
                 int turnoSalvo = rs.getInt("turno");
@@ -178,22 +140,6 @@ public class SaveDAO {
 
         } catch (Exception e) {
             System.out.println("Erro ao carregar partida: " + e.getMessage());
-=======
-        int turnoSalvo = rs.getInt("turno");
-
-        Jogador maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
-
-        DeckDAO deckDAO = new DeckDAO();
-        jogador.setDeck(deckDAO.gerarDeckAleatorio());
-        maquina.setDeck(deckDAO.gerarDeckAleatorio());
-
-        partida partidaCarregada = new partida(jogador, maquina);
-        partidaCarregada.iniciarPartida();
-
-        for (int i = 1; i < turnoSalvo; i++) {
-          jogador.comprarCarta();
-          maquina.comprarCarta();
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
         }
 
         partidaCarregada.definirTurno(turnoSalvo);
@@ -205,7 +151,6 @@ public class SaveDAO {
       System.out.println("Erro ao carregar partida: " + e.getMessage());
     }
 
-<<<<<<< HEAD
     /**
      * Remove o save de um jogador. Chamado assim que uma partida termina
      * (vitória ou derrota), para não deixar um save "fantasma" de uma
@@ -340,8 +285,3 @@ public class SaveDAO {
         return deck;
     }
 }
-=======
-    return null;
-  }
-}
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
