@@ -43,56 +43,50 @@ public class CartaDAO {
       System.out.println("Erro ao buscar cartas: " + e.getMessage());
     }
 
-    /**
-     * Busca uma única carta pelo id. Usado pelo SaveDAO para reconstruir
-     * a mão, o campo e o deck de uma partida salva a partir dos ids
-     * gravados no banco.
-     */
-    public Carta buscarPorId(int idCarta) {
+    return cartas;
+  }
 
-        String sql = """
-                SELECT
-                    c.id_carta,
-                    c.nome,
-                    c.ataque,
-                    c.vida,
-                    c.custo_sangue,
-                    c.descricao,
-                    r.nome AS raridade,
-                    t.nome AS tipo
-                FROM carta c
-                INNER JOIN raridade r ON c.id_raridade = r.id_raridade
-                INNER JOIN tipo_carta t ON c.id_tipo = t.id_tipo
-                WHERE c.id_carta = ?
-                """;
+  /**
+   * Busca uma única carta pelo id. Usado pelo SaveDAO para reconstruir
+   * a mão, o campo e o deck de uma partida salva a partir dos ids
+   * gravados no banco.
+   */
+  public Carta buscarPorId(int idCarta) {
 
-        try (
-                Connection conn = Conexao.conectar();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+    String sql = """
+        SELECT
+            c.id_carta,
+            c.nome,
+            c.ataque,
+            c.vida,
+            c.custo_sangue,
+            c.descricao,
+            r.nome AS raridade,
+            t.nome AS tipo
+        FROM carta c
+        INNER JOIN raridade r ON c.id_raridade = r.id_raridade
+        INNER JOIN tipo_carta t ON c.id_tipo = t.id_tipo
+        WHERE c.id_carta = ?
+        """;
 
-            ps.setInt(1, idCarta);
+    try (
+        Connection conn = Conexao.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ResultSet rs = ps.executeQuery();
+      ps.setInt(1, idCarta);
 
-            if (rs.next()) {
-                return construirCarta(conn, rs);
-            }
+      ResultSet rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            System.out.println("Erro ao buscar carta por id: " + e.getMessage());
-        }
+      if (rs.next()) {
+        return construirCarta(conn, rs);
+      }
 
-        return null;
+    } catch (Exception e) {
+      System.out.println("Erro ao buscar carta por id: " + e.getMessage());
     }
 
-    /**
-     * Monta um objeto Carta a partir de uma linha de ResultSet e tenta
-     * carregar as palavras-chave associadas a ela. Reaproveitado por
-     * CartaDAO e DeckDAO para manter a criação de Carta consistente
-     * em todo o projeto.
-     */
-    public static Carta construirCarta(Connection conn, ResultSet rs) throws SQLException {
+    return null;
+  }
 
   /**
    * Monta um objeto Carta a partir de uma linha de ResultSet e tenta
@@ -142,4 +136,5 @@ public class CartaDAO {
       // Tabela de palavras-chave ausente/diferente no schema atual.
       // Ignorado de propósito para não quebrar o carregamento das cartas.
     }
+  }
 }
