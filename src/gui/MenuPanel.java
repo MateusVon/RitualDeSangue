@@ -15,6 +15,7 @@ public class MenuPanel extends JPanel {
     private final JButton btnNovo;
     private final JButton btnContinuar;
     private final JButton btnDeck;
+    private final JButton btnHistorico;
     private final JButton btnStats;
     private final JButton btnLogout;
 
@@ -48,10 +49,11 @@ public class MenuPanel extends JPanel {
         btnNovo = Theme.accentButton("Novo jogo");
         btnContinuar = Theme.button("Continuar partida salva");
         btnDeck = Theme.button("Meu deck");
+        btnHistorico = Theme.button("Histórico de partidas");
         btnStats = Theme.button("Estatísticas");
         btnLogout = Theme.button("Logout");
 
-        for (JButton b : new JButton[]{btnNovo, btnContinuar, btnDeck, btnStats}) {
+        for (JButton b : new JButton[]{btnNovo, btnContinuar, btnDeck, btnHistorico, btnStats}) {
             b.setAlignmentX(CENTER_ALIGNMENT);
             b.setMaximumSize(new Dimension(260, 40));
             caixa.add(b);
@@ -66,6 +68,7 @@ public class MenuPanel extends JPanel {
         btnNovo.addActionListener(e -> iniciarNovoJogo());
         btnContinuar.addActionListener(e -> continuarJogo());
         btnDeck.addActionListener(e -> frame.mostrarDeck());
+        btnHistorico.addActionListener(e -> frame.mostrarHistorico());
         btnStats.addActionListener(e -> frame.mostrarEstatisticas());
         btnLogout.addActionListener(e -> frame.logout());
 
@@ -133,6 +136,7 @@ public class MenuPanel extends JPanel {
         btnNovo.setEnabled(habilitado);
         btnContinuar.setEnabled(habilitado);
         btnDeck.setEnabled(habilitado);
+        btnHistorico.setEnabled(habilitado);
         btnStats.setEnabled(habilitado);
         btnLogout.setEnabled(habilitado);
     }

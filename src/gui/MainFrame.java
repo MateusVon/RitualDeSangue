@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     private MenuPanel menuPanel;
     private DeckPanel deckPanel;
     private EstatisticasPanel estatisticasPanel;
+    private HistoricoPanel historicoPanel;
     private GameBoardPanel gameBoardPanel;
 
     private Jogador jogadorAtual;
@@ -84,6 +85,10 @@ public class MainFrame extends JFrame {
             container.remove(estatisticasPanel);
             estatisticasPanel = null;
         }
+        if (historicoPanel != null) {
+            container.remove(historicoPanel);
+            historicoPanel = null;
+        }
         if (gameBoardPanel != null) {
             container.remove(gameBoardPanel);
             gameBoardPanel = null;
@@ -114,6 +119,15 @@ public class MainFrame extends JFrame {
         }
         estatisticasPanel.atualizar(jogadorAtual);
         cardLayout.show(container, "stats");
+    }
+
+    public void mostrarHistorico() {
+        if (historicoPanel == null) {
+            historicoPanel = new HistoricoPanel(this);
+            container.add(historicoPanel, "historico");
+        }
+        historicoPanel.atualizar(jogadorAtual);
+        cardLayout.show(container, "historico");
     }
 
     /** Chamado depois que o GameController já preparou a partida (nova ou carregada). */
