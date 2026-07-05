@@ -1,6 +1,7 @@
 package model;
 
 import database.JogadorDAO;
+import database.PartidaDAO;
 import util.Cores;
 
 public class partida {
@@ -9,6 +10,15 @@ public class partida {
   private Jogador maquina;
   private int turno;
   private boolean partidaFinalizada;
+
+  // id_deck do jogador (tabela `deck`), usado só para registrar o
+  // resultado desta partida no histórico. Ver GameController, onde é
+  // definido logo após a partida ser criada.
+  private int idDeckJogador;
+
+  // Guardado para calcular a duração da partida no momento em que ela
+  // termina (usado no registro do histórico).
+  private final long inicioMillis = System.currentTimeMillis();
 
   // Quanto cada lado ganha de sangue automaticamente a cada novo turno.
   private static final int GANHO_SANGUE_POR_TURNO = 2;
@@ -55,7 +65,7 @@ public class partida {
     verificarFimPartida();
   }
 
-   public void verificarFimPartida() {
+  public void verificarFimPartida() {
     if (jogador.perdeu()) {
       partidaFinalizada = true;
       System.out.println("\n" + Cores.erro("Sua vida chegou a ZERO! Você perdeu..."));
@@ -72,13 +82,21 @@ public class partida {
 
     jogador.adicionarPartida();
 
+    int pontosGanhos = 0;
+
     if (!jogador.perdeu()) {
       jogador.adicionarVitoria();
-      jogador.adicionarPontuacao(PONTOS_POR_VITORIA);
+      pontosGanhos = PONTOS_POR_VITORIA;
+      jogador.adicionarPontuacao(pontosGanhos);
       System.out.println("+" + PONTOS_POR_VITORIA + " pontos! Pontuação total: " + jogador.getPontuacao());
     }
 
     dao.atualizarEstatisticas(jogador);
+
+    int duracaoSegundos = (int) ((System.currentTimeMillis() - inicioMillis) / 1000);
+    String resultado = jogador.perdeu() ? "DERROTA" : "VITORIA";
+
+    new PartidaDAO().registrarPartida(jogador.getId(), idDeckJogador, resultado, pontosGanhos, duracaoSegundos);
   }
 
   public boolean acabou() {
@@ -103,5 +121,14 @@ public class partida {
    */
   public void definirTurno(int turno) {
     this.turno = turno;
+  }
+
+  /**
+   * Define qual id_deck (tabela `deck`) representa o deck do jogador
+   * nesta partida, usado apenas para registrar o resultado no histórico
+   * ao final. Ver GameController.
+   */
+  public void definirIdDeckJogador(int idDeck) {
+    this.idDeckJogador = idDeck;
   }
 }

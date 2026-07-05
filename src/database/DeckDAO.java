@@ -87,4 +87,43 @@ public class DeckDAO {
     deck.embaralhar();
     return deck;
   }
+
+  /**
+   * Retorna o id_deck já existente do jogador (o mais recente), ou cria um
+   * novo registro em `deck` caso ele ainda não tenha nenhum. Isso existe
+   * porque a tabela `partida` exige um id_deck válido (chave estrangeira)
+   * para registrar o resultado de uma partida no histórico, mas o jogo
+   * ainda não tem uma tela de "montar meu deck" — então usamos um deck
+   * padrão por jogador só para satisfazer essa referência.
+   */
+  public int obterOuCriarDeckId(int idJogador) {
+
+    String selecionar = "SELECT id_deck FROM deck WHERE id_jogador = ? ORDER BY data_criacao DESC LIMIT 1";
+    String inserir = "INSERT INTO deck (id_jogador, nome) VALUES (?, 'Deck Padrão')";
+
+    try (Connection conn = Conexao.conectar()) {
+
+      try (PreparedStatement ps = conn.prepareStatement(selecionar)) {
+        ps.setInt(1, idJogador);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+          return rs.getInt("id_deck");
+        }
+      }
+
+      try (PreparedStatement ps = conn.prepareStatement(inserir, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        ps.setInt(1, idJogador);
+        ps.executeUpdate();
+        ResultSet chaves = ps.getGeneratedKeys();
+        if (chaves.next()) {
+          return chaves.getInt(1);
+        }
+      }
+
+    } catch (Exception e) {
+      System.out.println("Erro ao obter/criar deck do jogador: " + e.getMessage());
+    }
+
+    return 0;
+  }
 }
