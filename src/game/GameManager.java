@@ -25,15 +25,9 @@ public class GameManager {
     this.jogador = jogador;
     this.scanner = scanner;
 
-        // Garante que todo novo jogo comece com vida, sangue, mão e campo
-        // zerados — mesmo que este mesmo objeto Jogador já tenha sido
-        // usado em outra partida nesta sessão. Pontuação e estatísticas
-        // não são afetadas (resetParaNovaPartida não mexe nelas). Se o
-        // jogador estiver na verdade continuando uma partida salva, esse
-        // reset é sobrescrito logo em seguida por SaveDAO.carregar().
-        this.jogador.resetParaNovaPartida();
+    this.jogador.resetParaNovaPartida();
 
-        this.maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
+    this.maquina = new Jogador(0, "Máquina", "IA", "ia@game.com");
 
     DeckDAO dao = new DeckDAO();
     jogador.setDeck(dao.gerarDeckAleatorio());
@@ -61,6 +55,7 @@ public class GameManager {
     }
 
     partida = carregada;
+    this.maquina = partida.getMaquina();
 
     System.out.println(Cores.sucesso("\nPartida carregada! (turno " + partida.getTurno() + ")"));
 
@@ -100,21 +95,14 @@ public class GameManager {
       }
     }
 
-    // A partida terminou naturalmente (vitória ou derrota): pergunta
-    // se o jogador quer continuar para a próxima partida ou sair.
+    new SaveDAO().removerSave(jogador.getId());
     perguntarProximaPartida();
   }
-
-  // =========================
-  // PAINEL DE INFORMAÇÕES
-  // =========================
 
   private void exibirTabuleiro() {
 
     String linha = "════════════════════════════════════════════════════";
 
-        partida = carregada;
-        this.maquina = partida.getMaquina();
     System.out.println("\n" + Cores.titulo(linha));
     System.out.println(Cores.titulo("  RITUAL DE SANGUE  —  Turno " + partida.getTurno()));
     System.out.println(Cores.titulo(linha));
@@ -175,16 +163,6 @@ public class GameManager {
     }
   }
 
-  // =========================
-  // AÇÕES DO JOGADOR
-  // =========================
-
-  /**
-   * O jogador pode colocar QUANTAS cartas quiser em campo no mesmo
-   * turno, uma de cada vez, contanto que tenha sangue suficiente e
-   * espaço livre no campo. A cada carta colocada, TODAS as cartas já
-   * presentes no seu campo atacam (não só a que acabou de entrar).
-   */
   private void jogarCartaDaMao() {
 
     System.out.print("Carta: ");
@@ -195,29 +173,8 @@ public class GameManager {
 
     boolean jogou = jogador.jogarCarta(carta, pos);
 
-                case 1:
-                    jogarCartaDaMao();
-                    break;
-
-                case 2:
-                    executarTurnoMaquinaEAvancar();
-                    break;
-
-                case 3:
-                    SaveDAO dao = new SaveDAO();
-                    dao.salvar(partida);
-                    return;
-
-                default:
-                    System.out.println(Cores.erro("\nOpção inválida!"));
-            }
-        }
-
-        // A partida terminou naturalmente (vitória ou derrota): remove
-        // qualquer save "fantasma" dessa partida já finalizada e pergunta
-        // se o jogador quer continuar para a próxima partida ou sair.
-        new SaveDAO().removerSave(jogador.getId());
-        perguntarProximaPartida();
+    if (!jogou) {
+      return;
     }
 
     System.out.println(Cores.titulo("\n-- Seu campo ataca! --"));
@@ -225,15 +182,6 @@ public class GameManager {
     partida.verificarFimPartida();
   }
 
-  // =========================
-  // TURNO DA MÁQUINA
-  // =========================
-
-  /**
-   * A máquina compra sua carta do turno e então continua colocando
-   * cartas em campo enquanto tiver sangue suficiente, cartas na mão e
-   * espaço livre. A cada carta colocada, todo o campo dela ataca.
-   */
   private void turnoDaMaquina() {
 
     System.out.println(Cores.titulo("\n===== Turno Máquina ====="));
@@ -279,15 +227,6 @@ public class GameManager {
     }
   }
 
-  // =========================
-  // FIM DE PARTIDA
-  // =========================
-
-  /**
-   * Chamado assim que uma partida termina (vitória ou derrota). Pergunta
-   * se o jogador quer seguir para a próxima partida (mantendo a
-   * pontuação e as estatísticas acumuladas) ou salvar e encerrar.
-   */
   private void perguntarProximaPartida() {
 
     System.out.println(Cores.titulo("\n===== FIM DE PARTIDA ====="));
@@ -308,11 +247,6 @@ public class GameManager {
     }
   }
 
-  /**
-   * Prepara uma nova partida reaproveitando o mesmo jogador (mantendo
-   * pontuação e estatísticas), reiniciando vida/sangue/mão/campo e
-   * sorteando um novo deck e uma nova máquina para enfrentar.
-   */
   private void novaRodada() {
 
     jogador.resetParaNovaPartida();
@@ -332,9 +266,5 @@ public class GameManager {
     } catch (Exception e) {
       return -1;
     }
-<<<<<<< HEAD
-}
-=======
   }
 }
->>>>>>> e291dddf94841a7dd4fde314cd3059d29973c537
