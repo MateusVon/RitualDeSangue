@@ -1,6 +1,5 @@
 package gui;
 
-import database.PartidaDAO;
 import model.Jogador;
 import model.RegistroPartida;
 
@@ -63,7 +62,7 @@ public class HistoricoPanel extends JPanel {
     SwingWorker<ArrayList<RegistroPartida>, Void> worker = new SwingWorker<>() {
       @Override
       protected ArrayList<RegistroPartida> doInBackground() {
-        return new PartidaDAO().buscarHistorico(jogador.getId());
+        return frame.getPartidaDAO().buscarHistorico(jogador.getId());
       }
 
       @Override

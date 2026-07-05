@@ -73,4 +73,34 @@ public final class Theme {
         c.setOpaque(true);
         c.setBackground(cor);
     }
+
+    /**
+     * Monta um rótulo + campo de texto no padrão visual das telas de
+     * autenticação. Centralizado aqui para não ficar duplicado em cada
+     * tela que tem formulário (LoginPanel, CadastroPanel, ...).
+     */
+    public static JPanel campoComRotulo(String rotulo, JTextField campo) {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setOpaque(false);
+
+        JLabel l = label(rotulo, FONT_SMALL, TEXT_MUTED);
+        l.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+        campo.setMaximumSize(new Dimension(280, 34));
+        campo.setPreferredSize(new Dimension(280, 34));
+        campo.setBackground(SLOT_BG);
+        campo.setForeground(TEXT);
+        campo.setCaretColor(TEXT);
+        campo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER, 1),
+                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
+        campo.setFont(FONT_NORMAL);
+        campo.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+        p.add(l);
+        p.add(Box.createVerticalStrut(4));
+        p.add(campo);
+        return p;
+    }
 }

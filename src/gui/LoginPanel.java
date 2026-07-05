@@ -1,6 +1,5 @@
 package gui;
 
-import database.JogadorDAO;
 import model.Jogador;
 
 import javax.swing.*;
@@ -37,9 +36,9 @@ public class LoginPanel extends JPanel {
         caixa.add(Box.createVerticalStrut(4));
         caixa.add(subtitulo);
         caixa.add(Box.createVerticalStrut(28));
-        caixa.add(campoComRotulo("Email", campoEmail));
+        caixa.add(Theme.campoComRotulo("Email", campoEmail));
         caixa.add(Box.createVerticalStrut(14));
-        caixa.add(campoComRotulo("Senha", campoSenha));
+        caixa.add(Theme.campoComRotulo("Senha", campoSenha));
         caixa.add(Box.createVerticalStrut(18));
 
         status.setFont(Theme.FONT_SMALL);
@@ -71,31 +70,6 @@ public class LoginPanel extends JPanel {
         campoSenha.addActionListener(e -> tentarLogin());
     }
 
-    private JPanel campoComRotulo(String rotulo, JTextField campo) {
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setOpaque(false);
-
-        JLabel l = Theme.label(rotulo, Theme.FONT_SMALL, Theme.TEXT_MUTED);
-        l.setAlignmentX(LEFT_ALIGNMENT);
-
-        campo.setMaximumSize(new Dimension(280, 34));
-        campo.setPreferredSize(new Dimension(280, 34));
-        campo.setBackground(Theme.SLOT_BG);
-        campo.setForeground(Theme.TEXT);
-        campo.setCaretColor(Theme.TEXT);
-        campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Theme.BORDER, 1),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-        campo.setFont(Theme.FONT_NORMAL);
-        campo.setAlignmentX(LEFT_ALIGNMENT);
-
-        p.add(l);
-        p.add(Box.createVerticalStrut(4));
-        p.add(campo);
-        return p;
-    }
-
     private void tentarLogin() {
         String email = campoEmail.getText().trim();
         String senha = new String(campoSenha.getPassword());
@@ -111,7 +85,7 @@ public class LoginPanel extends JPanel {
         SwingWorker<Jogador, Void> worker = new SwingWorker<>() {
             @Override
             protected Jogador doInBackground() {
-                return new JogadorDAO().login(email, senha);
+                return frame.getJogadorDAO().login(email, senha);
             }
 
             @Override

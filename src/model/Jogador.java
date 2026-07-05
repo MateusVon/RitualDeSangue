@@ -258,6 +258,19 @@ public class Jogador {
     return totalVitorias;
   }
 
+  /**
+   * Percentual de vitórias sobre o total de partidas jogadas.
+   * Centralizado aqui (em vez de calculado na tela de estatísticas)
+   * para que qualquer interface — GUI ou terminal — use sempre a
+   * mesma regra: 0 quando ainda não houve partidas.
+   */
+  public double getAproveitamento() {
+    if (totalPartidas == 0) {
+      return 0.0;
+    }
+    return (100.0 * totalVitorias) / totalPartidas;
+  }
+
   public void setTotalPartidas(int totalPartidas) {
     this.totalPartidas = totalPartidas;
   }

@@ -54,10 +54,8 @@ public class EstatisticasPanel extends JPanel {
         vitoriasLabel.setText("Vitórias: " + jogador.getTotalVitorias());
         pontuacaoLabel.setText("Pontuação total: " + jogador.getPontuacao());
 
-        int partidas = jogador.getTotalPartidas();
-        if (partidas > 0) {
-            double taxa = (100.0 * jogador.getTotalVitorias()) / partidas;
-            aproveitamentoLabel.setText(String.format("Aproveitamento: %.0f%%", taxa));
+        if (jogador.getTotalPartidas() > 0) {
+            aproveitamentoLabel.setText(String.format("Aproveitamento: %.0f%%", jogador.getAproveitamento()));
         } else {
             aproveitamentoLabel.setText("Aproveitamento: —");
         }

@@ -17,6 +17,14 @@ public class GameBoardPanel extends JPanel {
 
     private int cartaSelecionada = -1;
 
+    // Trava única e central da tela: enquanto uma jogada está sendo
+    // processada em background (SwingWorker), nenhum clique — nem nos
+    // botões, nem nos slots do campo, nem nas cartas da mão — deve
+    // disparar uma nova ação. Antes, só os botões eram desabilitados,
+    // deixando os cliques no campo/mão "soltos" (descentralizados) e
+    // sujeitos a corrida de eventos.
+    private boolean processando = false;
+
     // Cabeçalho
     private final JLabel turnoLabel = Theme.label("", Theme.FONT_SUBTITLE, Theme.TEXT);
     private final JLabel jogadorInfoLabel = Theme.label("", Theme.FONT_NORMAL, Theme.TEXT);
@@ -269,6 +277,9 @@ public class GameBoardPanel extends JPanel {
     }
 
     private void selecionarCarta(int idx) {
+        if (processando) {
+            return;
+        }
         cartaSelecionada = (cartaSelecionada == idx) ? -1 : idx;
         atualizarTudo();
     }
@@ -276,7 +287,7 @@ public class GameBoardPanel extends JPanel {
     // ================= Ações =================
 
     private void jogarNaPosicao(int pos) {
-        if (cartaSelecionada == -1) {
+        if (processando || cartaSelecionada == -1) {
             return;
         }
 
@@ -301,6 +312,9 @@ public class GameBoardPanel extends JPanel {
     }
 
     private void passarTurno() {
+        if (processando) {
+            return;
+        }
         setControlesHabilitados(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -321,6 +335,9 @@ public class GameBoardPanel extends JPanel {
     }
 
     private void salvarESair() {
+        if (processando) {
+            return;
+        }
         setControlesHabilitados(false);
 
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -379,6 +396,7 @@ public class GameBoardPanel extends JPanel {
     }
 
     private void setControlesHabilitados(boolean habilitado) {
+        processando = !habilitado;
         btnPassarTurno.setEnabled(habilitado);
         btnSalvarSair.setEnabled(habilitado);
     }

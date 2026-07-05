@@ -1,14 +1,29 @@
 package gui;
 
+import database.JogadorDAO;
+import database.PartidaDAO;
 import model.Jogador;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Janela principal da aplicação. Usa {@link CardLayout} para alternar
- * entre as telas (login, cadastro, menu, deck, estatísticas, tabuleiro)
- * dentro de uma única janela.
+ * Janela principal da aplicação e ÚNICO ponto central do sistema GUI.
+ * <p>
+ * Duas responsabilidades ficam concentradas aqui, e só aqui:
+ * <ul>
+ *   <li><b>Navegação</b>: usa {@link CardLayout} para alternar entre as
+ *   telas (login, cadastro, menu, deck, estatísticas, histórico,
+ *   tabuleiro) dentro de uma única janela.</li>
+ *   <li><b>Acesso a dados/estado da sessão</b>: mantém o jogador
+ *   logado, o {@link GameController} da partida em andamento e as
+ *   instâncias dos DAOs usados pela interface gráfica
+ *   ({@link JogadorDAO}, {@link PartidaDAO}). Nenhuma tela deve
+ *   instanciar um DAO diretamente — todas pedem ao MainFrame através
+ *   de {@link #getJogadorDAO()} / {@link #getPartidaDAO()}. Isso evita
+ *   que o acesso ao banco fique espalhado (descentralizado) entre
+ *   LoginPanel, CadastroPanel, HistoricoPanel etc.</li>
+ * </ul>
  */
 public class MainFrame extends JFrame {
 
@@ -25,6 +40,11 @@ public class MainFrame extends JFrame {
 
     private Jogador jogadorAtual;
     private GameController controller;
+
+    // Acesso a dados centralizado: uma única instância de cada DAO
+    // usada por todas as telas da GUI (em vez de cada painel criar a sua).
+    private final JogadorDAO jogadorDAO = new JogadorDAO();
+    private final PartidaDAO partidaDAO = new PartidaDAO();
 
     public MainFrame() {
         super("Ritual de Sangue");
@@ -148,5 +168,15 @@ public class MainFrame extends JFrame {
 
     public Jogador getJogadorAtual() {
         return jogadorAtual;
+    }
+
+    /** Acesso centralizado ao DAO de jogador. Usado por Login e Cadastro. */
+    public JogadorDAO getJogadorDAO() {
+        return jogadorDAO;
+    }
+
+    /** Acesso centralizado ao DAO de histórico de partidas. Usado pela tela de Histórico. */
+    public PartidaDAO getPartidaDAO() {
+        return partidaDAO;
     }
 }
