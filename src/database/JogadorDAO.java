@@ -10,158 +10,153 @@ import java.sql.ResultSet;
 
 public class JogadorDAO {
 
-    public boolean emailExiste(String email) {
+  public boolean emailExiste(String email) {
 
-        String sql = """
-                SELECT email
-                FROM jogador
-                WHERE email = ?
-                """;
+    String sql = """
+        SELECT email
+        FROM jogador
+        WHERE email = ?
+        """;
 
-        try (
-                Connection conn = Conexao.conectar();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+    try (
+        Connection conn = Conexao.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, email);
+      ps.setString(1, email);
 
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
+      ResultSet rs = ps.executeQuery();
+      return rs.next();
 
-        } catch (Exception e) {
-            System.out.println("Erro ao verificar email: " + e.getMessage());
-            return false;
-        }
+    } catch (Exception e) {
+      System.out.println("Erro ao verificar email: " + e.getMessage());
+      return false;
+    }
+  }
+
+  public boolean cadastrar(String nome, String sobrenome, String email, String senha) {
+
+    // Verifica duplicidade ANTES de abrir uma conexão para o INSERT.
+    if (emailExiste(email)) {
+      System.out.println("Email já cadastrado");
+      return false;
     }
 
-    public boolean cadastrar(String nome, String sobrenome, String email, String senha) {
+    String sql = """
+        INSERT INTO jogador
+        (primeiro_nome, sobrenome, email, senha_hash)
+        VALUES (?, ?, ?, ?)
+        """;
 
-        // Verifica duplicidade ANTES de abrir uma conexão para o INSERT.
-        if (emailExiste(email)) {
-            System.out.println("Email já cadastrado");
-            return false;
-        }
+    try (
+        Connection conn = Conexao.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        String sql = """
-                INSERT INTO jogador
-                (primeiro_nome, sobrenome, email, senha_hash)
-                VALUES (?, ?, ?, ?)
-                """;
+      ps.setString(1, nome);
+      ps.setString(2, sobrenome);
+      ps.setString(3, email);
+      ps.setString(4, hashSenha(senha));
 
-        try (
-                Connection conn = Conexao.conectar();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+      ps.executeUpdate();
+      return true;
 
-            ps.setString(1, nome);
-            ps.setString(2, sobrenome);
-            ps.setString(3, email);
-            ps.setString(4, hashSenha(senha));
+    } catch (Exception e) {
+      System.out.println("Erro ao cadastrar jogador: " + e.getMessage());
+      return false;
+    }
+  }
 
-            ps.executeUpdate();
-            return true;
+  public Jogador login(String email, String senha) {
 
-        } catch (Exception e) {
-            System.out.println("Erro ao cadastrar jogador: " + e.getMessage());
-            return false;
-        }
+    String sql = """
+        SELECT *
+        FROM jogador
+        WHERE email = ?
+        AND senha_hash = ?
+        """;
+
+    try (
+        Connection conn = Conexao.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+
+      ps.setString(1, email);
+      ps.setString(2, hashSenha(senha));
+
+      ResultSet rs = ps.executeQuery();
+
+      if (rs.next()) {
+
+        Jogador jogador = new Jogador(
+            rs.getInt("id_jogador"),
+            rs.getString("primeiro_nome"),
+            rs.getString("sobrenome"),
+            rs.getString("email"));
+
+        jogador.setTotalPartidas(rs.getInt("total_partidas"));
+        jogador.setTotalVitorias(rs.getInt("total_vitorias"));
+        jogador.setPontuacao(rs.getInt("pontuacao"));
+
+        // O jogador precisa de um deck assim que loga, senão o menu
+        // "Meu deck" ficaria sempre vazio antes da primeira partida.
+        DeckDAO deckDAO = new DeckDAO();
+        jogador.setDeck(deckDAO.gerarDeckAleatorio());
+
+        System.out.println("Usuário encontrado!");
+        return jogador;
+      }
+
+      System.out.println("Login não encontrado");
+
+    } catch (Exception e) {
+      System.out.println("Erro no login: " + e.getMessage());
     }
 
-    public Jogador login(String email, String senha) {
+    return null;
+  }
 
-        String sql = """
-                SELECT *
-                FROM jogador
-                WHERE email = ?
-                AND senha_hash = ?
-                """;
+  public void atualizarEstatisticas(Jogador jogador) {
 
-        try (
-                Connection conn = Conexao.conectar();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+    String sql = """
+        UPDATE jogador
+        SET total_partidas = ?,
+            total_vitorias = ?,
+            pontuacao = ?
+        WHERE id_jogador = ?
+        """;
 
-            ps.setString(1, email);
-            ps.setString(2, hashSenha(senha));
+    try (
+        Connection conn = Conexao.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ResultSet rs = ps.executeQuery();
+      ps.setInt(1, jogador.getTotalPartidas());
+      ps.setInt(2, jogador.getTotalVitorias());
+      ps.setInt(3, jogador.getPontuacao());
+      ps.setInt(4, jogador.getId());
 
-            if (rs.next()) {
+      ps.executeUpdate();
 
-                Jogador jogador = new Jogador(
-                        rs.getInt("id_jogador"),
-                        rs.getString("primeiro_nome"),
-                        rs.getString("sobrenome"),
-                        rs.getString("email")
-                );
-
-                jogador.setTotalPartidas(rs.getInt("total_partidas"));
-                jogador.setTotalVitorias(rs.getInt("total_vitorias"));
-                jogador.setPontuacao(rs.getInt("pontuacao"));
-
-                // O jogador precisa de um deck assim que loga, senão o menu
-                // "Meu deck" ficaria sempre vazio antes da primeira partida.
-                DeckDAO deckDAO = new DeckDAO();
-                jogador.setDeck(deckDAO.gerarDeckAleatorio());
-
-                System.out.println("Usuário encontrado!");
-                return jogador;
-            }
-
-            System.out.println("Login não encontrado");
-
-        } catch (Exception e) {
-            System.out.println("Erro no login: " + e.getMessage());
-        }
-
-        return null;
+    } catch (Exception e) {
+      System.out.println("Erro ao atualizar estatísticas: " + e.getMessage());
     }
+  }
 
-    public void atualizarEstatisticas(Jogador jogador) {
+  /**
+   * Gera o hash SHA-256 da senha em texto hexadecimal.
+   * A coluna do banco chama-se "senha_hash", então nunca gravamos
+   * nem comparamos senha em texto puro.
+   */
+  private String hashSenha(String senha) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] hash = md.digest(senha.getBytes(StandardCharsets.UTF_8));
 
-        String sql = """
-                UPDATE jogador
-                SET total_partidas = ?,
-                    total_vitorias = ?,
-                    pontuacao = ?
-                WHERE id_jogador = ?
-                """;
+      StringBuilder sb = new StringBuilder();
+      for (byte b : hash) {
+        sb.append(String.format("%02x", b));
+      }
+      return sb.toString();
 
-        try (
-                Connection conn = Conexao.conectar();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-
-            ps.setInt(1, jogador.getTotalPartidas());
-            ps.setInt(2, jogador.getTotalVitorias());
-            ps.setInt(3, jogador.getPontuacao());
-            ps.setInt(4, jogador.getId());
-
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            System.out.println("Erro ao atualizar estatísticas: " + e.getMessage());
-        }
+    } catch (Exception e) {
+      throw new RuntimeException("Falha ao gerar hash da senha", e);
     }
-
-    /**
-     * Gera o hash SHA-256 da senha em texto hexadecimal.
-     * A coluna do banco chama-se "senha_hash", então nunca gravamos
-     * nem comparamos senha em texto puro.
-     */
-    private String hashSenha(String senha) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(senha.getBytes(StandardCharsets.UTF_8));
-
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Falha ao gerar hash da senha", e);
-        }
-    }
+  }
 }
