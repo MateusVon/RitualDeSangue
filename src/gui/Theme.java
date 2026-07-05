@@ -40,6 +40,13 @@ public final class Theme {
   public static final Color ATAQUE = new Color(0xff, 0xca, 0x28);
   public static final Color PONTOS = new Color(0x66, 0xbb, 0x6a);
 
+  // Cores específicas das barras de status do tabuleiro (GameBoardPanel):
+  // vida sempre em verde, sangue sempre em vermelho, conforme pedido —
+  // deliberadamente diferentes de VIDA/SANGUE acima (usadas no texto dos
+  // cartões e do registro da partida) para não misturar os dois usos.
+  public static final Color BARRA_VIDA = new Color(0x4c, 0xaf, 0x50);
+  public static final Color BARRA_SANGUE = new Color(0xe5, 0x39, 0x35);
+
   public static final Font FONT_TITLE = new Font("SansSerif", Font.BOLD, 26);
   public static final Font FONT_SUBTITLE = new Font("SansSerif", Font.BOLD, 16);
   public static final Font FONT_BOLD = new Font("SansSerif", Font.BOLD, 14);

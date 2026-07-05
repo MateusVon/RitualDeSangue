@@ -9,8 +9,16 @@ import java.util.ArrayList;
 
 public class DeckPanel extends JPanel {
 
+    // Grade fixa de 5 linhas x 4 colunas (20 cartas), em vez do antigo
+    // FlowLayout, que ia empilhando as cartas soltas lado a lado e
+    // quebrando linha de forma imprevisível conforme a largura da janela.
+    // Com a grade fixa, o deck aparece sempre organizado no mesmo formato
+    // 4x5, célula por célula.
+    private static final int COLUNAS = 4;
+    private static final int LINHAS = 5;
+
     private final MainFrame frame;
-    private final JPanel grade = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 14));
+    private final JPanel grade = new JPanel(new GridLayout(LINHAS, COLUNAS, 14, 14));
     private final JLabel contagemLabel = Theme.label("", Theme.FONT_NORMAL, Theme.TEXT_MUTED);
 
     public DeckPanel(MainFrame frame) {
