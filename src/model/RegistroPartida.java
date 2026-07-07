@@ -2,11 +2,6 @@ package model;
 
 import java.time.LocalDateTime;
 
-/**
- * Representa uma linha da tabela `partida`: o resultado consolidado de
- * uma partida já finalizada (histórico). Não deve ser confundido com a
- * classe {@link partida}, que representa uma partida em andamento.
- */
 public class RegistroPartida {
 
   private final String resultado;

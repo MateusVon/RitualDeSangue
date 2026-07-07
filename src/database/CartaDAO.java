@@ -46,11 +46,7 @@ public class CartaDAO {
     return cartas;
   }
 
-  /**
-   * Busca uma única carta pelo id. Usado pelo SaveDAO para reconstruir
-   * a mão, o campo e o deck de uma partida salva a partir dos ids
-   * gravados no banco.
-   */
+
   public Carta buscarPorId(int idCarta) { 
 
     String sql = """
@@ -88,12 +84,7 @@ public class CartaDAO {
     return null;
   }
 
-  /**
-   * Monta um objeto Carta a partir de uma linha de ResultSet e tenta
-   * carregar as palavras-chave associadas a ela. Reaproveitado por
-   * CartaDAO e DeckDAO para manter a criação de Carta consistente
-   * em todo o projeto.
-   */
+ 
   public static Carta construirCarta(Connection conn, ResultSet rs) throws SQLException {
 
     Carta carta = new Carta(
@@ -111,13 +102,7 @@ public class CartaDAO {
     return carta;
   }
 
-  /**
-   * ATENÇÃO: assume uma tabela "carta_palavra_chave" com as colunas
-   * "id_carta" e "palavra_chave". Se o seu schema usa outro nome,
-   * ajuste a query abaixo. Caso a tabela não exista, a falha é
-   * silenciosa e a carta simplesmente fica sem palavras-chave —
-   * isso não quebra o restante do sistema.
-   */
+ 
   private static void carregarPalavrasChave(Connection conn, Carta carta) {
 
     String sql = "SELECT palavra_chave FROM carta_palavra_chave WHERE id_carta = ?";
@@ -133,8 +118,7 @@ public class CartaDAO {
       }
 
     } catch (Exception e) {
-      // Tabela de palavras-chave ausente/diferente no schema atual.
-      // Ignorado de propósito para não quebrar o carregamento das cartas.
+     
     }
   }
 }

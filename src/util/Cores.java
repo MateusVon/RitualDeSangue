@@ -1,10 +1,6 @@
 package util;
 
-/**
- * Códigos ANSI simples para colorir a saída no terminal. Se o terminal do
- * usuário não suportar cores ANSI, os códigos aparecem como texto
- * inofensivo, então isso é seguro de usar em qualquer ambiente.
- */
+
 public class Cores {
 
   public static final String RESET = "\u001B[0m";
@@ -24,7 +20,7 @@ public class Cores {
   public static final String CIANO_CLARO = "\u001B[96m";
 
   private Cores() {
-    // utilitário estático, não deve ser instanciado
+    
   }
 
   public static String vida(String texto) {

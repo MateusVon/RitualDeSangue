@@ -154,10 +154,8 @@ public class TerminalUI {
     jogo.iniciar();
   }
 
-  // =========================
+  
   // CONTINUAR
-  // =========================
-
   private void continuarJogo(Jogador jogador) {
 
     System.out.println("\nCarregando save...");
@@ -165,21 +163,13 @@ public class TerminalUI {
     GameManager jogo = new GameManager(jogador, scanner);
     jogo.carregarPartida();
   }
-
-  // =========================
-  // DECK
-  // =========================
-
+  // DECK 
   private void mostrarDeck(Jogador jogador) {
 
     System.out.println("\n" + Cores.titulo("===== SEU DECK ====="));
     jogador.getDeck().mostrarDeck();
   }
-
-  // =========================
   // HISTÓRICO
-  // =========================
-
   private void mostrarHistorico(Jogador jogador) {
 
   System.out.println("\n" + Cores.titulo("===== HISTÓRICO DE PARTIDAS ====="));
@@ -202,9 +192,8 @@ public class TerminalUI {
         + "  (" + r.getDuracaoFormatada() + ")");
   }
 }
-  // =========================
   // ESTATÍSTICAS
-  // =========================
+  
 
   private void mostrarEstatisticas(Jogador jogador) {
 

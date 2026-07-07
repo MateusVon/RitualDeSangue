@@ -88,14 +88,7 @@ public class DeckDAO {
     return deck;
   }
 
-  /**
-   * Retorna o id_deck já existente do jogador (o mais recente), ou cria um
-   * novo registro em `deck` caso ele ainda não tenha nenhum. Isso existe
-   * porque a tabela `partida` exige um id_deck válido (chave estrangeira)
-   * para registrar o resultado de uma partida no histórico, mas o jogo
-   * ainda não tem uma tela de "montar meu deck" — então usamos um deck
-   * padrão por jogador só para satisfazer essa referência.
-   */
+  
   public int obterOuCriarDeckId(int idJogador) {
 
     String selecionar = "SELECT id_deck FROM deck WHERE id_jogador = ? ORDER BY data_criacao DESC LIMIT 1";

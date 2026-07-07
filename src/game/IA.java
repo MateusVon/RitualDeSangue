@@ -50,11 +50,7 @@ public class IA {
     return jogou ? posicao : -1;
   }
 
-  /**
-   * Escolhe a carta de maior ataque dentre as que a máquina consegue
-   * pagar com o sangue disponível. Retorna null se nenhuma carta da mão
-   * for viável.
-   */
+  
   private Carta escolherMelhorCarta(ArrayList<Carta> mao, int sangueDisponivel) {
 
     Carta melhor = null;

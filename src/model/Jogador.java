@@ -11,24 +11,14 @@ public class Jogador {
   private String sobrenome;
   private String email;
 
-  // Vida inicial de cada jogador (jogador e máquina).
   public static final int VIDA_INICIAL = 50;
   private int vida = VIDA_INICIAL;
-
-  // Pontos de Sangue: recurso usado para colocar cartas em campo.
-  // Toda partida OBRIGATORIAMENTE começa com 5 pontos de sangue.
   public static final int SANGUE_INICIAL = 5;
   private int sangue = SANGUE_INICIAL;
-
-  // Pontuação acumulada do jogador (persistida entre partidas).
   private int pontuacao;
-
   private int totalPartidas;
   private int totalVitorias;
-
-  // Limite máximo de cartas na mão (jogador e máquina).
-  public static final int LIMITE_MAO = 5;
-
+  public static final int LIMITE_MAO = 5; 
   private Deck deck = new Deck();
   private ArrayList<Carta> mao = new ArrayList<>();
   private Carta[] campo = new Carta[4];
@@ -44,11 +34,7 @@ public class Jogador {
     return vida <= 0;
   }
 
-  /**
-   * @return true se a carta foi realmente colocada no campo, false se a
-   *         jogada foi inválida (usado pelo GameManager para saber se deve
-   *         disparar a resposta da IA e o combate).
-   */
+  
   public boolean jogarCarta(int indiceCarta, int posicao) {
 
     if (indiceCarta < 0 || indiceCarta >= mao.size()) {
@@ -83,11 +69,7 @@ public class Jogador {
     return true;
   }
 
-  /**
-   * Compra uma carta do deck, respeitando o limite máximo de cartas na
-   * mão. Se a mão já estiver cheia, a compra é simplesmente ignorada
-   * (a carta permanece no deck).
-   */
+
   public void comprarCarta() {
     if (mao.size() >= LIMITE_MAO) {
       return;
@@ -99,18 +81,11 @@ public class Jogador {
     }
   }
 
-  /**
-   * Adiciona pontos de Sangue (ex: recompensa por eliminar uma carta
-   * inimiga ou ganho automático a cada turno).
-   */
+
   public void adicionarSangue(int valor) {
     sangue += valor;
   }
 
-  /**
-   * Tenta gastar pontos de Sangue. Retorna false (sem gastar nada) se
-   * o jogador não tiver sangue suficiente.
-   */
   public boolean gastarSangue(int valor) {
     if (valor > sangue) {
       return false;
@@ -123,11 +98,7 @@ public class Jogador {
     pontuacao += valor;
   }
 
-  /**
-   * Reinicia o estado de uma partida (vida, sangue, mão e campo),
-   * preservando estatísticas e pontuação acumuladas. Usado quando o
-   * jogador decide continuar para a próxima partida.
-   */
+  
   public void resetParaNovaPartida() {
     this.vida = VIDA_INICIAL;
     this.sangue = SANGUE_INICIAL;
@@ -197,23 +168,15 @@ public class Jogador {
     return vida;
   }
 
-  /**
-   * Usado pelo SaveDAO para restaurar a vida exata de uma partida salva.
-   */
   public void setVida(int vida) {
     this.vida = vida;
   }
 
-  /**
-   * Usado pelo SaveDAO para restaurar a mão exata de uma partida salva.
-   */
+
   public void setMao(ArrayList<Carta> mao) {
     this.mao = mao;
   }
 
-  /**
-   * Usado pelo SaveDAO para restaurar o campo exato de uma partida salva.
-   */
   public void setCampo(Carta[] campo) {
     this.campo = campo;
   }
@@ -258,12 +221,6 @@ public class Jogador {
     return totalVitorias;
   }
 
-  /**
-   * Percentual de vitórias sobre o total de partidas jogadas.
-   * Centralizado aqui (em vez de calculado na tela de estatísticas)
-   * para que qualquer interface — GUI ou terminal — use sempre a
-   * mesma regra: 0 quando ainda não houve partidas.
-   */
   public double getAproveitamento() {
     if (totalPartidas == 0) {
       return 0.0;

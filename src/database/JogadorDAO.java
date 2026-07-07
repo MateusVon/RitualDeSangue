@@ -95,8 +95,7 @@ public class JogadorDAO {
         jogador.setTotalVitorias(rs.getInt("total_vitorias"));
         jogador.setPontuacao(rs.getInt("pontuacao"));
 
-        // O jogador precisa de um deck assim que loga, senão o menu
-        // "Meu deck" ficaria sempre vazio antes da primeira partida.
+       
         DeckDAO deckDAO = new DeckDAO();
         jogador.setDeck(deckDAO.gerarDeckAleatorio());
 
@@ -139,11 +138,7 @@ public class JogadorDAO {
     }
   }
 
-  /**
-   * Gera o hash SHA-256 da senha em texto hexadecimal.
-   * A coluna do banco chama-se "senha_hash", então nunca gravamos
-   * nem comparamos senha em texto puro.
-   */
+ 
   private String hashSenha(String senha) {
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");

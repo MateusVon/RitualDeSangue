@@ -9,13 +9,7 @@ public class CombateManager {
   // A cada carta eliminada, quem eliminou ganha 10 pontos.
   private static final int PONTOS_POR_ELIMINACAO = 10;
 
-  /**
-   * Faz TODAS as cartas presentes no campo do atacante atacarem a mesma
-   * posição no campo do defensor (ou causarem dano direto ao jogador
-   * defensor, se a posição estiver vazia). Chamado a cada vez que uma
-   * carta nova é colocada em campo — ou seja, cartas já presentes no
-   * tabuleiro atacam de novo a cada novo posicionamento.
-   */
+
   public void atacar(Jogador atacanteJogador, Jogador defensorJogador) {
 
     Carta[] campoAtacante = atacanteJogador.getCampo();
@@ -56,11 +50,7 @@ public class CombateManager {
     }
   }
 
-  /**
-   * Concede a recompensa por eliminar uma carta: metade inteira (divisão
-   * inteira) do custo de sangue da carta eliminada, mais pontos fixos de
-   * pontuação, para o dono da carta que causou a eliminação.
-   */
+  
   private void processarEliminacao(Carta cartaEliminada, Jogador responsavel) {
 
     int recompensaSangue = cartaEliminada.getCustoSangue() / 2;

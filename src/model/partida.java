@@ -11,19 +11,15 @@ public class partida {
   private int turno;
   private boolean partidaFinalizada;
 
-  // id_deck do jogador (tabela `deck`), usado só para registrar o
-  // resultado desta partida no histórico. Ver GameController, onde é
-  // definido logo após a partida ser criada.
+
   private int idDeckJogador;
 
-  // Guardado para calcular a duração da partida no momento em que ela
-  // termina (usado no registro do histórico).
+  
   private final long inicioMillis = System.currentTimeMillis();
 
-  // Quanto cada lado ganha de sangue automaticamente a cada novo turno.
-  private static final int GANHO_SANGUE_POR_TURNO = 2;
+  
+  private static final int GANHO_SANGUE_POR_TURNO = 3;
 
-  // Pontuação concedida ao vencer uma partida.
   private static final int PONTOS_POR_VITORIA = 100;
 
   public partida(Jogador jogador, Jogador maquina) {
@@ -50,9 +46,6 @@ public class partida {
     turno++;
 
     System.out.println("\n===== TURNO " + turno + " =====");
-
-    // A cada turno, os dois lados acumulam pontos de Sangue para
-    // poder colocar mais cartas em campo.
     jogador.adicionarSangue(GANHO_SANGUE_POR_TURNO);
     maquina.adicionarSangue(GANHO_SANGUE_POR_TURNO);
 
@@ -115,19 +108,11 @@ public class partida {
     return turno;
   }
 
-  /**
-   * Usado pelo SaveDAO para restaurar o contador de turno de uma
-   * partida salva anteriormente.
-   */
   public void definirTurno(int turno) {
     this.turno = turno;
   }
 
-  /**
-   * Define qual id_deck (tabela `deck`) representa o deck do jogador
-   * nesta partida, usado apenas para registrar o resultado no histórico
-   * ao final. Ver GameController.
-   */
+  
   public void definirIdDeckJogador(int idDeck) {
     this.idDeckJogador = idDeck;
   }
