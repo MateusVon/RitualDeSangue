@@ -51,7 +51,7 @@ public class CartaDAO {
    * a mão, o campo e o deck de uma partida salva a partir dos ids
    * gravados no banco.
    */
-  public Carta buscarPorId(int idCarta) {
+  public Carta buscarPorId(int idCarta) { 
 
     String sql = """
         SELECT

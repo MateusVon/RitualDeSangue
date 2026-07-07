@@ -10,11 +10,7 @@ public class AuthService {
   private JogadorDAO dao = new JogadorDAO();
   private Scanner sc;
 
-  /**
-   * Recebe o Scanner de fora (TerminalUI) em vez de criar o seu
-   * próprio, evitando ter dois Scanners diferentes lendo de
-   * System.in ao mesmo tempo, o que pode causar entradas perdidas.
-   */
+
   public AuthService(Scanner sc) {
     this.sc = sc;
   }
